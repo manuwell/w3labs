@@ -1,7 +1,8 @@
 package config
 
 type Config struct {
-	Logger Logger `envPrefix:"LOG_"`
+	AwsEndpoint string `env:"AWS_ENDPOINT"`
+	Logger      Logger `envPrefix:"LOG_"`
 }
 
 type Logger struct {
