@@ -1,9 +1,11 @@
 package adapters
 
 import (
+	"fmt"
 	"log"
 	"log/slog"
 	"os"
+	"runtime"
 	"w3labs/internal/config"
 	"w3labs/internal/tools"
 )
@@ -34,8 +36,7 @@ func NewSlog(cfg config.Logger) tools.Logger {
 	}
 
 	slog := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		Level:     level,
-		AddSource: true,
+		Level: level,
 	}))
 	return &Slog{
 		slog: slog,
@@ -71,6 +72,8 @@ func (l *Slog) log(level int, msg string, fields map[string]any) {
 		}
 	}
 
+	args = append(args, "source", l.getCallerFile())
+
 	switch level {
 	case lwarn:
 		l.slog.Warn(msg, args...)
@@ -84,4 +87,13 @@ func (l *Slog) log(level int, msg string, fields map[string]any) {
 	case ldebug:
 		l.slog.Debug(msg, args...)
 	}
+}
+
+func (l *Slog) getCallerFile() string {
+	_, file, line, ok := runtime.Caller(3) // get caller of real func
+	if !ok {
+		return ""
+	}
+
+	return fmt.Sprintf("%s:%d", file, line)
 }
