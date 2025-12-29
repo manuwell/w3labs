@@ -5,6 +5,9 @@ install:
 mock-gen: install
 	@mockery 
 
-server: install
-	cd ./bin && ./run.sh
+docker-up:
+	@docker-compose up -d
+
+server: install docker-up
+	cd ./bin && sleep 5 && ./run.sh
 
