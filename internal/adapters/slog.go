@@ -34,7 +34,8 @@ func NewSlog(cfg config.Logger) tools.Logger {
 	}
 
 	slog := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		Level: level,
+		Level:     level,
+		AddSource: true,
 	}))
 	return &Slog{
 		slog: slog,
